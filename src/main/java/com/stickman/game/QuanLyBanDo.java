@@ -78,14 +78,21 @@ public class QuanLyBanDo {
         return items;
     }
 
-    private ItemGame taoItem(String loai, List<VatCan> vatCans, List<ItemGame> existing, Random rng) {
-        double x,y; int tries=0;
-        do { x=55+rng.nextDouble()*990; y=55+rng.nextDouble()*540; tries++; }
-        while (tries<40 && (
-            vatCans.stream().anyMatch(o->x<o.getX()+o.getRong()+10&&x+26>o.getX()-10&&y<o.getY()+o.getCao()+10&&y+26>o.getY()-10) ||
-            existing.stream().anyMatch(e->Math.hypot(e.getX()-x,e.getY()-y)<36)));
+private ItemGame taoItem(String loai, List<VatCan> vatCans, List<ItemGame> existing, Random rng) {
+        double x, y; int tries = 0;
+        do {
+            x = 55 + rng.nextDouble() * 990;
+            y = 55 + rng.nextDouble() * 540;
+            tries++;
+            final double fx = x, fy = y;
+            boolean overlap = vatCans.stream().anyMatch(o ->
+                fx < o.getX()+o.getRong()+10 && fx+26 > o.getX()-10 &&
+                fy < o.getY()+o.getCao()+10 && fy+26 > o.getY()-10);
+            boolean tooClose = existing.stream().anyMatch(e ->
+                Math.hypot(e.getX()-fx, e.getY()-fy) < 36);
+            if (!overlap && !tooClose) break;
+        } while (tries < 40);
         return ItemGame.builder().loai(loai).x(x).y(y).kichThuoc(26).id(System.nanoTime()).build();
     }
-
     private VatCan vc(double x,double y,double w,double h){return VatCan.builder().x(x).y(y).rong(w).cao(h).build();}
 }
