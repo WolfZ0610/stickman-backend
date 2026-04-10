@@ -122,10 +122,17 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
             Map.of("id",1,"x",80.0,"y",80.0,"hp",100),
             Map.of("id",2,"x",970.0,"y",540.0,"hp",100)
         );
-        List<Map<String,Object>> obstacles = phong.getVatCans().stream().map(o ->
-            Map.of("x",o.getX(),"y",o.getY(),"w",o.getRong(),"h",o.getCao())).toList();
-        List<Map<String,Object>> items = phong.getItems().stream().map(it ->
-            Map.of("type",it.getLoai(),"x",it.getX(),"y",it.getY())).toList();
+        List<Map<String,Object>> obstacles = phong.getVatCans().stream().map(o -> {
+            Map<String,Object> m = new java.util.HashMap<>();
+            m.put("x", o.getX()); m.put("y", o.getY());
+            m.put("w", o.getRong()); m.put("h", o.getCao());
+            return m;
+        }).toList();
+        List<Map<String,Object>> items = phong.getItems().stream().map(it -> {
+            Map<String,Object> m = new java.util.HashMap<>();
+            m.put("type", it.getLoai()); m.put("x", it.getX()); m.put("y", it.getY());
+            return m;
+        }).toList();
 
         gui(p1, Map.of("type","game_start","myId",1,"roomId",roomId,"players",players,"obstacles",obstacles,"items",items));
         gui(p2, Map.of("type","game_start","myId",2,"roomId",roomId,"players",players,"obstacles",obstacles,"items",items));
