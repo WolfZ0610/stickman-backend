@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: stickman-backend
+    runtime: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/stickman-arena-backend-2.0.0.jar
+    envVars:
+      - key: PORT
+        value: 8080
